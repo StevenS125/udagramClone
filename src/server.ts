@@ -1,6 +1,8 @@
 import express from 'express';
+import { Router, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import { filter } from 'bluebird';
 
 (async () => {
 
@@ -17,8 +19,18 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   // GET /filteredimage?image_url={{URL}}
   // endpoint to filter an image from a public url.
   // IT SHOULD
-  app.get("/filteredimage?image_url={{URL}}", async (req,res ) => {
-    console.log(req.params)
+  app.get("/filteredimage", async (req,res ) => {
+    let url = req.query.image_url;
+
+    if (!url) {
+      return res.status(400).send("Image url is required");
+    }
+
+    const filePath = await filterImageFromURL(url);
+    res.sendFile(filePath);
+    res.on('finish', function() {
+      deleteLocalFiles([filePath]);
+    });
   });
   //    1. validate the image_url query
   //    2. call filterImageFromURL(image_url) to filter the image
@@ -30,7 +42,9 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-
+  app.get( "/icecream", async ( req, res ) => {
+    res.send("try fucking yourself /filteredimage?image_url=")
+  } );
 
 
   //! END @TODO1
@@ -38,7 +52,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
-    res.send("try GET /filteredimage?image_url={{}}")
+    res.send("try GET /filteredimage?image_url=")
   } );
   
 
