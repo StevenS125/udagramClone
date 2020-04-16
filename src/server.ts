@@ -19,7 +19,7 @@ import { filter } from 'bluebird';
   // GET /filteredimage?image_url={{URL}}
   // endpoint to filter an image from a public url.
   // IT SHOULD
-  app.get("/filteredimage", async (req,res ) => {
+  app.get("/filteredimage", async (req: Request,res: Response ) => {
     let url = req.query.image_url;
 
     if (!url) {
