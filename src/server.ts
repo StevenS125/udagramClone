@@ -27,7 +27,7 @@ import { filter } from 'bluebird';
     }
 
     const filePath = await filterImageFromURL(url);
-    res.sendFile(filePath);
+    res.status(200).sendFile(filePath);
     res.on('finish', function() {
       deleteLocalFiles([filePath]);
     });
